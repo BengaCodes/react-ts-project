@@ -1,4 +1,4 @@
-import Button from './Button'
+import Button from '../ui/Button'
 
 const Header = () => {
   return (
@@ -17,7 +17,7 @@ const Header = () => {
             </Button>
           </li>
           <li>
-            <Button to='/sessions'>Upcoming Sessions</Button>
+            <Button>Upcoming Sessions</Button>
           </li>
         </ul>
       </nav>
