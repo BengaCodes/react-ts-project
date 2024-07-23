@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer } from 'react'
 
-type Session = {
+export type Session = {
   id: string
   title: string
   summary: string
@@ -82,28 +82,26 @@ const initialState: SessionState = {
 }
 
 function sessionsReducer(state: SessionState, action: Action) {
-  switch (action.type) {
-    case SessionsActions.BOOK_SESSION:
-      return {
-        ...state,
-        upcomingSessions: state.upcomingSessions.map((session) =>
-          session.id === action.payload.id
-            ? { ...session, booked: true }
-            : session
-        )
-      }
-    case SessionsActions.CANCEL_SESSION:
-      return {
-        ...state,
-        upcomingSessions: state.upcomingSessions.map((session) =>
-          session.id === action.payload
-            ? { ...session, booked: false }
-            : session
-        )
-      }
-    default:
+  if (action.type === 'BOOK_SESSION') {
+    if (
+      state.upcomingSessions.some((session) => session.id === action.payload.id)
+    ) {
       return state
+    }
+    return {
+      upcomingSessions: state.upcomingSessions.concat(action.payload)
+    }
   }
+
+  if (action.type === 'CANCEL_SESSION') {
+    return {
+      upcomingSessions: state.upcomingSessions.filter(
+        (session) => session.id !== action.payload
+      )
+    }
+  }
+
+  return state
 }
 
 function SessionsContextProvider({ children }: SessionsContextProviderProps) {
